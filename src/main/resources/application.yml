@@ -1,5 +1,20 @@
+server:
+  error:
+    whitelabel:
+      enabled: true
+  port: 8081
+
 spring:
+  data:
+    mongodb:
+      uri: #mongodb://user:pass@host:port
+      database: cnat-tracker-service-db
   kafka:
-    bootstrap-servers: "172.26.137.29:9092"
+    bootstrap-servers: #host:port
     consumer:
-      group-id: "tracker-update"
+      group-id: "tracker"
+
+app:
+  kafka:
+    topics:
+      tracker-data-register: tracker-data-register
