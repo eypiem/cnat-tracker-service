@@ -1,11 +1,11 @@
-package dev.apma.cnat.trackerservice.kafka;
+package dev.apma.cnat.trackerservice.kafka.controller;
 
 
+import dev.apma.cnat.trackerservice.dto.TrackerDataDto;
 import dev.apma.cnat.trackerservice.model.Tracker;
 import dev.apma.cnat.trackerservice.model.TrackerData;
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
 import dev.apma.cnat.trackerservice.repository.TrackerRepository;
-import dev.apma.cnat.trackerservice.web.dto.TrackerDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class TrackerDataRegisterKafkaListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrackerDataRegisterKafkaListener.class);
+public class TrackerDataRegisterKafkaController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrackerDataRegisterKafkaController.class);
 
     @Autowired
     private TrackerRepository trackerRepo;

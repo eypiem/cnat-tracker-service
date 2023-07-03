@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.web.dto;
+package dev.apma.cnat.trackerservice.dto;
 
 
 import java.time.Instant;

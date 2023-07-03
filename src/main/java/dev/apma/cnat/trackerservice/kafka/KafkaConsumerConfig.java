@@ -1,7 +1,7 @@
-package dev.apma.cnat.trackerservice.kafka.listener;
+package dev.apma.cnat.trackerservice.kafka;
 
 
-import dev.apma.cnat.trackerservice.web.dto.TrackerDataDto;
+import dev.apma.cnat.trackerservice.dto.TrackerDataDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,13 +24,18 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
 
-    @Bean
-    public ConsumerFactory<String, TrackerDataDto> registerTrackerDataConsumerFactory() {
+    /// TODO: See if this can be specified in application.yml instead
+    private Map<String, Object> baseKafkaProps() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServerUrl);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-        return new DefaultKafkaConsumerFactory<>(props,
+        return props;
+    }
+
+    @Bean
+    public ConsumerFactory<String, TrackerDataDto> registerTrackerDataConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(baseKafkaProps(),
                 new StringDeserializer(),
                 new JsonDeserializer<>(TrackerDataDto.class));
     }
