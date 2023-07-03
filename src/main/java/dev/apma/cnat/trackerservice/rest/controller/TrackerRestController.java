@@ -28,6 +28,6 @@ public class TrackerRestController {
     @GetMapping("/get")
     public List<Tracker> getUserTrackers(@RequestParam @NotNull String userId) {
         LOGGER.info("/trackers/get: %s".formatted(userId));
-        return trackerRepo.findTrackersByUserId(userId);
+        return trackerRepo.findAllByUserId(userId);
     }
 }

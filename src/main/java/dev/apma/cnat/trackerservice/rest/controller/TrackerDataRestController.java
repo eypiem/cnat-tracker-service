@@ -3,14 +3,17 @@ package dev.apma.cnat.trackerservice.rest.controller;
 
 import dev.apma.cnat.trackerservice.model.TrackerData;
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
+import dev.apma.cnat.trackerservice.repository.TrackerRepository;
+import dev.apma.cnat.trackerservice.rest.request.GetTrackerDataRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/tracker-data")
@@ -18,22 +21,29 @@ public class TrackerDataRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerDataRestController.class);
 
     @Autowired
+    private TrackerRepository trackerRepo;
+
+    @Autowired
     private TrackerDataRepository trackerDataRepo;
 
-    @GetMapping("/get/{trackerId}")
-    public List<TrackerData> getTrackerData(@PathVariable String trackerId,
-                                            @RequestParam Optional<Instant> from,
-                                            @RequestParam Optional<Instant> to) {
-        LOGGER.info("/tracker-data/get/{}", trackerId);
-        if (from.isPresent() && to.isPresent()) {
-            return trackerDataRepo.findAllByDateAfterAndDateBefore(trackerId, from.get(), to.get());
+    @PostMapping("/get")
+    public List<TrackerData> getTrackerData(@RequestBody GetTrackerDataRequest body) {
+        LOGGER.info("/tracker-data/get: {}", body);
+        if (trackerRepo.findByIdAndUserId(body.tracker().id(), body.tracker().userId()) == null) {
+            LOGGER.warn("Non matching user and tracker request detected.");
+            return List.of();
         }
-        if (from.isPresent()) {
-            return trackerDataRepo.findAllByDateAfter(trackerId, from.get());
+        if (body.from().isPresent() && body.to().isPresent()) {
+            return trackerDataRepo.findAllByDateAfterAndDateBefore(body.tracker().id(),
+                    body.from().get(),
+                    body.to().get());
         }
-        if (to.isPresent()) {
-            return trackerDataRepo.findAllByDateBefore(trackerId, to.get());
+        if (body.from().isPresent()) {
+            return trackerDataRepo.findAllByDateAfter(body.tracker().id(), body.from().get());
         }
-        return trackerDataRepo.findAll(trackerId);
+        if (body.to().isPresent()) {
+            return trackerDataRepo.findAllByDateBefore(body.tracker().id(), body.to().get());
+        }
+        return trackerDataRepo.findAll(body.tracker().id());
     }
 }
