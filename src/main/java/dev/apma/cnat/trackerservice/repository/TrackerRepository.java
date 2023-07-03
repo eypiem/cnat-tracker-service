@@ -10,9 +10,4 @@ import java.util.List;
 public interface TrackerRepository extends MongoRepository<Tracker, String> {
     @Query("{userId: '?0'}")
     List<Tracker> findTrackersByUserId(String userId);
-
-    @Query(value = "{id: '?0'}", fields = "{'userId': 1}")
-    List<Tracker> findAll(String category);
-
-    public long count();
 }

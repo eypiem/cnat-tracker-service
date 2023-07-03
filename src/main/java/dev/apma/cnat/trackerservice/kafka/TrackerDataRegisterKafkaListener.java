@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.kafka.listener;
+package dev.apma.cnat.trackerservice.kafka;
 
 
 import dev.apma.cnat.trackerservice.model.Tracker;
@@ -9,22 +9,15 @@ import dev.apma.cnat.trackerservice.web.dto.TrackerDataDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
-@KafkaListener(topics = "${app.kafka.topics.tracker-data-register}")
+@Service
 public class TrackerDataRegisterKafkaListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrackerDataRegisterKafkaListener.class);
-
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
     private TrackerRepository trackerRepo;
@@ -32,16 +25,17 @@ public class TrackerDataRegisterKafkaListener {
     @Autowired
     private TrackerDataRepository trackerDataRepo;
 
-    @KafkaHandler
-    void listen(TrackerDataDto data) {
-
+    @KafkaListener(topics = "${app.kafka.topics.tracker-data-register}", containerFactory =
+            "registerTrackerDataKafkaListenerContainerFactory")
+    void listen(@Payload TrackerDataDto data) {
         LOGGER.info("TrackerDataRegisterListener {}", data);
 
         Optional<Tracker> t = trackerRepo.findById(data.trackerId());
         if (t.isPresent()) {
             trackerDataRepo.save(new TrackerData(t.get(), data.data(), data.timestamp()));
+            LOGGER.info("Tracker data saved.");
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "trackerId not found.");
+            LOGGER.error("trackerId not found.");
         }
     }
 }

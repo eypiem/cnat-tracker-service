@@ -9,8 +9,4 @@ import java.util.Map;
 
 @Document("trackerData")
 public record TrackerData(@DBRef Tracker tracker, Map<String, Object> data, Instant timestamp) {
-    @Override
-    public String toString() {
-        return "TrackerData{" + "tracker=" + tracker + ", data=" + data + ", timestamp=" + timestamp + '}';
-    }
 }

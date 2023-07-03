@@ -7,10 +7,10 @@ server:
 spring:
   data:
     mongodb:
-      uri: #mongodb://user:pass@host:port
+      uri: #mongodb://user:pass@host:27017
       database: cnat-tracker-service-db
   kafka:
-    bootstrap-servers: #host:port
+    bootstrap-servers: #host:9092
     consumer:
       group-id: "tracker"
 
