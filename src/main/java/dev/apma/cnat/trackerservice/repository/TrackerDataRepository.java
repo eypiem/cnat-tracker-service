@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface TrackerDataRepository extends MongoRepository<TrackerData, String> {
     @Query(value = "{tracker:'?0'}")
-    List<TrackerData> findAll(String trackerId);
+    List<TrackerData> findAllByTrackerId(String trackerId);
 
     @Query(value = "{tracker:'?0', 'timestamp' : { $gt: ?1 }}")
-    List<TrackerData> findAllByDateAfter(String trackerId, Instant from);
+    List<TrackerData> findAllByTrackerIdAndDateAfter(String trackerId, Instant from);
 
     @Query(value = "{tracker:'?0', 'timestamp' : { $lt: ?1 }}")
-    List<TrackerData> findAllByDateBefore(String trackerId, Instant to);
+    List<TrackerData> findAllByTrackerIdAndDateBefore(String trackerId, Instant to);
 
     @Query(value = "{tracker:'?0', 'timestamp' : { $gt: ?1, $lt: ?2 }}")
-    List<TrackerData> findAllByDateAfterAndDateBefore(String trackerId, Instant from, Instant to);
+    List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBefore(String trackerId, Instant from, Instant to);
 }

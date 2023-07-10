@@ -10,8 +10,4 @@ import java.util.List;
 public interface TrackerRepository extends MongoRepository<Tracker, String> {
     @Query("{userId: '?0'}")
     List<Tracker> findAllByUserId(String userId);
-
-    /// TODO: Return boolean
-    @Query("{id: '?0', userId: '?1'}")
-    Tracker findByIdAndUserId(String id, String userId);
 }

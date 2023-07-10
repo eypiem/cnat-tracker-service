@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tracker")
@@ -20,14 +21,26 @@ public class TrackerRestController {
     private TrackerRepository trackerRepo;
 
     @PostMapping("/register")
-    public Tracker registerNewTracker(@RequestBody @NotNull Tracker tracker) {
-        LOGGER.info("/trackers/register: {}", tracker);
+    public Tracker registerNewTracker(@RequestBody Tracker tracker) {
+        LOGGER.info("/tracker/register: {}", tracker);
         return trackerRepo.save(tracker);
+    }
+
+    @GetMapping("/get/{id}")
+    public Optional<Tracker> getUserTracker(@PathVariable String id) {
+        LOGGER.info("/tracker/get/{}", id);
+        return trackerRepo.findById(id);
     }
 
     @GetMapping("/get")
     public List<Tracker> getUserTrackers(@RequestParam @NotNull String userId) {
-        LOGGER.info("/trackers/get: %s".formatted(userId));
+        LOGGER.info("/tracker/get: {}", userId);
         return trackerRepo.findAllByUserId(userId);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteUserTracker(@PathVariable String id) {
+        LOGGER.info("/tracker/delete/{}", id);
+        trackerRepo.deleteById(id);
     }
 }
