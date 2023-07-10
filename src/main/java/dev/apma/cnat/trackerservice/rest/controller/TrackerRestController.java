@@ -2,12 +2,14 @@ package dev.apma.cnat.trackerservice.rest.controller;
 
 
 import dev.apma.cnat.trackerservice.model.Tracker;
+import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
 import dev.apma.cnat.trackerservice.repository.TrackerRepository;
-import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +20,9 @@ public class TrackerRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerRestController.class);
 
     @Autowired
+    private TrackerDataRepository trackerDataRepo;
+
+    @Autowired
     private TrackerRepository trackerRepo;
 
     @PostMapping("/register")
@@ -26,21 +31,27 @@ public class TrackerRestController {
         return trackerRepo.save(tracker);
     }
 
-    @GetMapping("/get/{id}")
-    public Optional<Tracker> getUserTracker(@PathVariable String id) {
-        LOGGER.info("/tracker/get/{}", id);
-        return trackerRepo.findById(id);
+    @GetMapping("/get/{trackerId}")
+    public Optional<Tracker> getTracker(@PathVariable String trackerId) {
+        LOGGER.info("/tracker/get/{}", trackerId);
+        return trackerRepo.findById(trackerId);
     }
 
     @GetMapping("/get")
-    public List<Tracker> getUserTrackers(@RequestParam @NotNull String userId) {
+    public List<Tracker> getUserTrackers(@RequestParam String userId) {
         LOGGER.info("/tracker/get: {}", userId);
         return trackerRepo.findAllByUserId(userId);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteUserTracker(@PathVariable String id) {
-        LOGGER.info("/tracker/delete/{}", id);
-        trackerRepo.deleteById(id);
+    @DeleteMapping("/delete/{trackerId}")
+    public void deleteUserTracker(@PathVariable String trackerId) {
+        LOGGER.info("/tracker/delete/{}", trackerId);
+        var tracker = trackerRepo.findById(trackerId);
+        if (tracker.isPresent()) {
+            trackerDataRepo.deleteAllByTrackerId(trackerId);
+            trackerRepo.deleteById(trackerId);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tracker does not exist");
+        }
     }
 }

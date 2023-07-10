@@ -2,6 +2,7 @@ package dev.apma.cnat.trackerservice.repository;
 
 
 import dev.apma.cnat.trackerservice.model.TrackerData;
+import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -20,4 +21,7 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
 
     @Query(value = "{tracker:'?0', 'timestamp' : { $gt: ?1, $lt: ?2 }}")
     List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBefore(String trackerId, Instant from, Instant to);
+
+    @DeleteQuery(value = "{tracker: '?0'}")
+    void deleteAllByTrackerId(String trackerId);
 }
