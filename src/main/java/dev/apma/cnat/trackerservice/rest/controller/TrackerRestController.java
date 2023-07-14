@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/tracker")
@@ -31,16 +30,17 @@ public class TrackerRestController {
         return trackerRepo.save(tracker);
     }
 
-    @GetMapping("/get/{trackerId}")
-    public Optional<Tracker> getTracker(@PathVariable String trackerId) {
-        LOGGER.info("/tracker/get/{}", trackerId);
-        return trackerRepo.findById(trackerId);
-    }
-
     @GetMapping("/get")
     public List<Tracker> getUserTrackers(@RequestParam String userId) {
         LOGGER.info("/tracker/get: {}", userId);
         return trackerRepo.findAllByUserId(userId);
+    }
+
+    @GetMapping("/get/{trackerId}")
+    public Tracker getTracker(@PathVariable String trackerId) {
+        LOGGER.info("/tracker/get/{}", trackerId);
+        return trackerRepo.findById(trackerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tracker does not exist"));
     }
 
     @DeleteMapping("/delete/{trackerId}")
@@ -51,7 +51,7 @@ public class TrackerRestController {
             trackerDataRepo.deleteAllByTrackerId(trackerId);
             trackerRepo.deleteById(trackerId);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tracker does not exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tracker does not exist");
         }
     }
 }

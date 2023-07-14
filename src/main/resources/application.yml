@@ -2,15 +2,15 @@ server:
   error:
     whitelabel:
       enabled: true
-  port: 8081
+  port: 80
 
 spring:
   data:
     mongodb:
-      uri: #mongodb://user:pass@host:27017
+      uri: ${CNAT_TRACKER_SERVICE_MONGODB_URI}
       database: cnat-tracker-service-db
   kafka:
-    bootstrap-servers: #host:9092
+    bootstrap-servers: ${CNAT_KAFKA_URI}
     consumer:
       group-id: "tracker"
 
