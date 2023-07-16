@@ -8,7 +8,7 @@ spring:
   data:
     mongodb:
       uri: ${CNAT_TRACKER_SERVICE_MONGODB_URI}
-      database: cnat-tracker-service-db
+      database: ${CNAT_TRACKER_SERVICE_MONGODB_DATABASE}
   kafka:
     bootstrap-servers: ${CNAT_KAFKA_URI}
     consumer:
