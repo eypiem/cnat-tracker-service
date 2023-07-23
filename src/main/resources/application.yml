@@ -9,6 +9,7 @@ spring:
     mongodb:
       uri: ${CNAT_TRACKER_SERVICE_MONGODB_URI}
       database: ${CNAT_TRACKER_SERVICE_MONGODB_DATABASE}
+      auto-index-creation: true
   kafka:
     bootstrap-servers: ${CNAT_KAFKA_URI}
     consumer:

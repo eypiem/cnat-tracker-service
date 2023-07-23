@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      database: cnat-tracker-service-db
+      host: localhost
+      port: ${mongodb.container.port}
+      auto-index-creation: true

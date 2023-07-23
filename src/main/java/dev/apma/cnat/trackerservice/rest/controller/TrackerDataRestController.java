@@ -1,8 +1,10 @@
 package dev.apma.cnat.trackerservice.rest.controller;
 
 
+import dev.apma.cnat.trackerservice.model.Tracker;
 import dev.apma.cnat.trackerservice.model.TrackerData;
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
+import dev.apma.cnat.trackerservice.repository.TrackerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,22 @@ public class TrackerDataRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerDataRestController.class);
 
     @Autowired
+    private TrackerRepository trackerRepo;
+
+    @Autowired
     private TrackerDataRepository trackerDataRepo;
+
+    @GetMapping("/get")
+    public List<TrackerData> getLatestTrackerData(@RequestParam String userId) {
+        LOGGER.info("/tracker-data/get {}", userId);
+        return trackerRepo.findAllByUserId(userId)
+                .stream()
+                .map(Tracker::id)
+                .map(trackerDataRepo::findLatestByTrackerId)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
 
     @GetMapping("/get/{trackerId}")
     public List<TrackerData> getTrackerData(@PathVariable String trackerId,
