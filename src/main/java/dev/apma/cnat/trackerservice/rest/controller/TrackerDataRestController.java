@@ -25,9 +25,9 @@ public class TrackerDataRestController {
     @Autowired
     private TrackerDataRepository trackerDataRepo;
 
-    @GetMapping("/get-latest")
+    @GetMapping("/latest")
     public List<TrackerData> getLatestTrackerData(@RequestParam String userId) {
-        LOGGER.info("/tracker-data/get-latest {}", userId);
+        LOGGER.info("/tracker-data/latest {}", userId);
         return trackerRepo.findAllByUserId(userId)
                 .stream()
                 .map(Tracker::id)
@@ -37,11 +37,11 @@ public class TrackerDataRestController {
                 .toList();
     }
 
-    @GetMapping("/get/{trackerId}")
+    @GetMapping("/{trackerId}")
     public List<TrackerData> getTrackerData(@PathVariable String trackerId,
                                             @RequestParam Optional<Instant> from,
                                             @RequestParam Optional<Instant> to) {
-        LOGGER.info("/tracker-data/get/{} from: {} to: {}", trackerId, from, to);
+        LOGGER.info("/tracker-data/{} from: {} to: {}", trackerId, from, to);
         if (from.isPresent() && to.isPresent()) {
             return trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from.get(), to.get());
         }
@@ -52,5 +52,11 @@ public class TrackerDataRestController {
             return trackerDataRepo.findAllByTrackerIdAndDateBefore(trackerId, to.get());
         }
         return trackerDataRepo.findAllByTrackerId(trackerId);
+    }
+
+    @GetMapping("/{trackerId}/location")
+    public List<TrackerData> getTrackerLocations(@PathVariable String trackerId) {
+        LOGGER.info("/tracker-data/{}/location", trackerId);
+        return trackerDataRepo.findLocationsByTrackerId(trackerId);
     }
 }

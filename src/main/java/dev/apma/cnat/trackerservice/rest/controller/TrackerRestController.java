@@ -30,22 +30,22 @@ public class TrackerRestController {
         return trackerRepo.save(tracker);
     }
 
-    @GetMapping("/get")
+    @GetMapping("/")
     public List<Tracker> getUserTrackers(@RequestParam String userId) {
-        LOGGER.info("/tracker/get: {}", userId);
+        LOGGER.info("/tracker: {}", userId);
         return trackerRepo.findAllByUserId(userId);
     }
 
-    @GetMapping("/get/{trackerId}")
+    @GetMapping("/{trackerId}")
     public Tracker getTracker(@PathVariable String trackerId) {
-        LOGGER.info("/tracker/get/{}", trackerId);
+        LOGGER.info("/tracker/{}", trackerId);
         return trackerRepo.findById(trackerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tracker does not exist"));
     }
 
-    @DeleteMapping("/delete/{trackerId}")
+    @DeleteMapping("/{trackerId}")
     public void deleteUserTracker(@PathVariable String trackerId) {
-        LOGGER.info("/tracker/delete/{}", trackerId);
+        LOGGER.info("/tracker/{}", trackerId);
         var tracker = trackerRepo.findById(trackerId);
         if (tracker.isPresent()) {
             trackerDataRepo.deleteAllByTrackerId(trackerId);

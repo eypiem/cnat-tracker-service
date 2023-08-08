@@ -29,6 +29,12 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': -1 } }", "{ $limit: 1 }"})
     Optional<TrackerData> findLatestByTrackerId(String trackerId);
 
+    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }",
+            "{ $match: {'data.location': { $exists : true } } }",
+            "{ $sort: { 'timestamp': -1 } }",
+            "{ $limit: 10 }"})
+    List<TrackerData> findLocationsByTrackerId(String trackerId);
+
     @DeleteQuery(value = "{'tracker': '?0'}")
     void deleteAllByTrackerId(String trackerId);
 }
