@@ -8,14 +8,16 @@ import dev.apma.cnat.trackerservice.repository.TrackerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/tracker-data")
 public class TrackerDataRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerDataRestController.class);
 
@@ -27,7 +29,7 @@ public class TrackerDataRestController {
 
     @GetMapping("/latest")
     public List<TrackerData> getLatestTrackerData(@RequestParam String userId) {
-        LOGGER.info("/tracker-data/latest {}", userId);
+        LOGGER.info("get /latest {}", userId);
         return trackerRepo.findAllByUserId(userId)
                 .stream()
                 .map(Tracker::id)
@@ -37,11 +39,15 @@ public class TrackerDataRestController {
                 .toList();
     }
 
-    @GetMapping("/{trackerId}")
+    @GetMapping("/{trackerId}/data")
     public List<TrackerData> getTrackerData(@PathVariable String trackerId,
                                             @RequestParam Optional<Instant> from,
-                                            @RequestParam Optional<Instant> to) {
-        LOGGER.info("/tracker-data/{} from: {} to: {}", trackerId, from, to);
+                                            @RequestParam Optional<Instant> to,
+                                            @RequestParam Optional<Boolean> hasLocation) {
+        LOGGER.info("get /{}/data from: {} to: {} hasLocation: {}", trackerId, from, to, hasLocation);
+        if (hasLocation.orElse(false)) {
+            return trackerDataRepo.findAllByTrackerIdWithLocation(trackerId);
+        }
         if (from.isPresent() && to.isPresent()) {
             return trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from.get(), to.get());
         }
@@ -52,11 +58,5 @@ public class TrackerDataRestController {
             return trackerDataRepo.findAllByTrackerIdAndDateBefore(trackerId, to.get());
         }
         return trackerDataRepo.findAllByTrackerId(trackerId);
-    }
-
-    @GetMapping("/{trackerId}/location")
-    public List<TrackerData> getTrackerLocations(@PathVariable String trackerId) {
-        LOGGER.info("/tracker-data/{}/location", trackerId);
-        return trackerDataRepo.findLocationsByTrackerId(trackerId);
     }
 }

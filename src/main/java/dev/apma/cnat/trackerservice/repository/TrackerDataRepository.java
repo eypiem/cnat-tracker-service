@@ -33,7 +33,7 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
             "{ $match: {'data.location': { $exists : true } } }",
             "{ $sort: { 'timestamp': -1 } }",
             "{ $limit: 10 }"})
-    List<TrackerData> findLocationsByTrackerId(String trackerId);
+    List<TrackerData> findAllByTrackerIdWithLocation(String trackerId);
 
     @DeleteQuery(value = "{'tracker': '?0'}")
     void deleteAllByTrackerId(String trackerId);
