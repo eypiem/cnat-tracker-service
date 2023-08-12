@@ -14,15 +14,15 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': 1 } }"})
     List<TrackerData> findAllByTrackerId(String trackerId);
 
-    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $gt: '?1' } } }",
+    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $gt: ?1 } } }",
             "{ $sort: { 'timestamp': 1 } }"})
     List<TrackerData> findAllByTrackerIdAndDateAfter(String trackerId, Instant from);
 
-    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $lt: '?1' } } }",
+    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $lt: ?1 } } }",
             "{ $sort: { 'timestamp': 1 } }"})
     List<TrackerData> findAllByTrackerIdAndDateBefore(String trackerId, Instant to);
 
-    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': {  $gt: '?1', $lt: '?2' } } }",
+    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': {  $gt: ?1, $lt: ?2 } } }",
             "{ $sort: { 'timestamp': 1 } }"})
     List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBefore(String trackerId, Instant from, Instant to);
 

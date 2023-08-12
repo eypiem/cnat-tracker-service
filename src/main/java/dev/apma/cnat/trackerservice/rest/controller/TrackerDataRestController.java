@@ -27,7 +27,7 @@ public class TrackerDataRestController {
     @Autowired
     private TrackerDataRepository trackerDataRepo;
 
-    @GetMapping("/latest")
+    @GetMapping("/data/latest")
     public List<TrackerData> getLatestTrackerData(@RequestParam String userId) {
         LOGGER.info("get /latest {}", userId);
         return trackerRepo.findAllByUserId(userId)
