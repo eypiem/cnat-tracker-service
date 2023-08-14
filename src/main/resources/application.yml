@@ -13,9 +13,17 @@ spring:
   kafka:
     bootstrap-servers: ${CNAT_KAFKA_URI}
     consumer:
-      group-id: "tracker"
+      group-id: ${CNAT_TRACKER_SERVICE_KAFKA_CONSUMER_GROUP_ID}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: false
 
 app:
   kafka:
     topics:
-      tracker-data-register: tracker-data-register
+      tracker-data-register: ${CNAT_KAFKA_TRACKER_DATA_TOPIC}
