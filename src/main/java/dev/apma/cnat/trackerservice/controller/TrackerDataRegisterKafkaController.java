@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.kafka.controller;
+package dev.apma.cnat.trackerservice.controller;
 
 
 import dev.apma.cnat.trackerservice.dto.TrackerDataDto;
@@ -19,11 +19,15 @@ import java.util.Optional;
 public class TrackerDataRegisterKafkaController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrackerDataRegisterKafkaController.class);
 
-    @Autowired
-    private TrackerRepository trackerRepo;
+    private final TrackerRepository trackerRepo;
+
+    private final TrackerDataRepository trackerDataRepo;
 
     @Autowired
-    private TrackerDataRepository trackerDataRepo;
+    public TrackerDataRegisterKafkaController(TrackerRepository trackerRepo, TrackerDataRepository trackerDataRepo) {
+        this.trackerRepo = trackerRepo;
+        this.trackerDataRepo = trackerDataRepo;
+    }
 
     @KafkaListener(topics = "${app.kafka.topics.tracker-data-register}", properties = {"spring.json.value.default.type=dev.apma.cnat.trackerservice.dto.TrackerDataDto"})
     void listen(@Payload TrackerDataDto data) {

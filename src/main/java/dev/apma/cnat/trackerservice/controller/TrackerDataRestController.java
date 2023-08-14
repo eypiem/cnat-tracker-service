@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.rest.controller;
+package dev.apma.cnat.trackerservice.controller;
 
 
 import dev.apma.cnat.trackerservice.model.Tracker;
@@ -21,11 +21,15 @@ import java.util.Optional;
 public class TrackerDataRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerDataRestController.class);
 
-    @Autowired
-    private TrackerRepository trackerRepo;
+    private final TrackerRepository trackerRepo;
+
+    private final TrackerDataRepository trackerDataRepo;
 
     @Autowired
-    private TrackerDataRepository trackerDataRepo;
+    public TrackerDataRestController(TrackerRepository trackerRepo, TrackerDataRepository trackerDataRepo) {
+        this.trackerRepo = trackerRepo;
+        this.trackerDataRepo = trackerDataRepo;
+    }
 
     @GetMapping("/data/latest")
     public List<TrackerData> getLatestTrackerData(@RequestParam String userId) {
