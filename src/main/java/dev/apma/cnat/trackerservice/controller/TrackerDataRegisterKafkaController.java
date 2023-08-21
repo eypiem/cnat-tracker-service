@@ -33,7 +33,7 @@ public class TrackerDataRegisterKafkaController {
     void listen(@Payload TrackerDataDto data) {
         LOGGER.info("TrackerDataRegisterListener {}", data);
 
-        Optional<Tracker> t = trackerRepo.findById(data.trackerId());
+        Optional<Tracker> t = trackerRepo.findById(data.tracker().id());
         if (t.isPresent()) {
             trackerDataRepo.save(new TrackerData(t.get(), data.data(), data.timestamp()));
             LOGGER.info("Tracker data saved.");
