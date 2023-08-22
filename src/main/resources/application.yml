@@ -23,6 +23,13 @@ spring:
               type:
                 headers: false
 
+management:
+  endpoint:
+    health:
+      #show-details: always
+      probes:
+        enabled: true
+
 app:
   kafka:
     topics:
