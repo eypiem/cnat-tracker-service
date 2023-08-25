@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.service;
+package dev.apma.cnat.trackerservice.controller;
 
 
 import dev.apma.cnat.trackerservice.dto.FieldValidationError;

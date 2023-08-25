@@ -2,10 +2,9 @@ package dev.apma.cnat.trackerservice.controller;
 
 
 import dev.apma.cnat.trackerservice.dto.TrackerDTO;
-import dev.apma.cnat.trackerservice.model.Tracker;
-import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
-import dev.apma.cnat.trackerservice.repository.TrackerRepository;
+import dev.apma.cnat.trackerservice.exceptions.TrackerServiceException;
 import dev.apma.cnat.trackerservice.requests.TrackerRegisterRequest;
+import dev.apma.cnat.trackerservice.service.TrackerService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,44 +19,45 @@ import java.util.List;
 public class TrackerRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerRestController.class);
 
-    private final TrackerDataRepository trackerDataRepo;
-
-    private final TrackerRepository trackerRepo;
+    private final TrackerService trackerSvc;
 
     @Autowired
-    public TrackerRestController(TrackerDataRepository trackerDataRepo, TrackerRepository trackerRepo) {
-        this.trackerDataRepo = trackerDataRepo;
-        this.trackerRepo = trackerRepo;
+    public TrackerRestController(TrackerService trackerSvc) {
+        this.trackerSvc = trackerSvc;
     }
 
     @PostMapping("")
-    public TrackerDTO registerTracker(@Valid @RequestBody TrackerRegisterRequest trr) {
-        LOGGER.info("post: {}", trr);
-        return TrackerDTO.fromTracker(trackerRepo.save(new Tracker(null, trr.userId(), trr.name())));
+    public TrackerDTO registerTracker(@Valid @RequestBody TrackerRegisterRequest req) {
+        LOGGER.info("post {}", req);
+        return trackerSvc.registerTracker(req);
     }
 
     @GetMapping("")
     public List<TrackerDTO> getUserTrackers(@RequestParam String userId) {
-        LOGGER.info("get: {}", userId);
-        return trackerRepo.findAllByUserId(userId).stream().map(TrackerDTO::fromTracker).toList();
+        LOGGER.info("get {}", userId);
+        return trackerSvc.getUserTrackers(userId);
     }
 
     @GetMapping("/{trackerId}")
     public TrackerDTO getTracker(@PathVariable String trackerId) {
         LOGGER.info("get /{}", trackerId);
-        return TrackerDTO.fromTracker(trackerRepo.findById(trackerId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tracker does not exist")));
+        try {
+            return trackerSvc.getTracker(trackerId);
+        } catch (TrackerServiceException e) {
+            LOGGER.error("Failed to get tracker with id [{}]: {}", trackerId, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to get tracker");
+        }
     }
 
     @DeleteMapping("/{trackerId}")
-    public void deleteUserTracker(@PathVariable String trackerId) {
+    public void deleteTracker(@PathVariable String trackerId) {
         LOGGER.info("delete /{}", trackerId);
-        var tracker = trackerRepo.findById(trackerId);
-        if (tracker.isPresent()) {
-            trackerDataRepo.deleteAllByTrackerId(trackerId);
-            trackerRepo.deleteById(trackerId);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tracker does not exist");
-        }
+        trackerSvc.deleteTracker(trackerId);
+    }
+
+    @DeleteMapping("")
+    public void deleteAllUserTrackers(@RequestParam String userId) {
+        LOGGER.info("delete {}", userId);
+        trackerSvc.deleteAllUserTrackers(userId);
     }
 }

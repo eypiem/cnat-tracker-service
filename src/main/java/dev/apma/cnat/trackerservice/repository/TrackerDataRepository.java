@@ -8,33 +8,38 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 public interface TrackerDataRepository extends MongoRepository<TrackerData, String> {
-    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': 1 } }"})
-    List<TrackerData> findAllByTrackerId(String trackerId);
+    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': 1 } }", "{ $limit: ?1 }"})
+    List<TrackerData> findAllByTrackerId(String trackerId, int limit);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $gt: ?1 } } }",
-            "{ $sort: { 'timestamp': 1 } }"})
-    List<TrackerData> findAllByTrackerIdAndDateAfter(String trackerId, Instant from);
+            "{ $sort: { 'timestamp': 1 } }",
+            "{ $limit: ?2 }"})
+    List<TrackerData> findAllByTrackerIdAndDateAfter(String trackerId, Instant from, int limit);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $lt: ?1 } } }",
-            "{ $sort: { 'timestamp': 1 } }"})
-    List<TrackerData> findAllByTrackerIdAndDateBefore(String trackerId, Instant to);
+            "{ $sort: { 'timestamp': 1 } }",
+            "{ $limit: ?2 }"})
+    List<TrackerData> findAllByTrackerIdAndDateBefore(String trackerId, Instant to, int limit);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': {  $gt: ?1, $lt: ?2 } } }",
-            "{ $sort: { 'timestamp': 1 } }"})
-    List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBefore(String trackerId, Instant from, Instant to);
-
-    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': -1 } }", "{ $limit: 1 }"})
-    Optional<TrackerData> findLatestByTrackerId(String trackerId);
+            "{ $sort: { 'timestamp': 1 } }",
+            "{ $limit: ?3 }"})
+    List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBefore(String trackerId,
+                                                                  Instant from,
+                                                                  Instant to,
+                                                                  int limit);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }",
             "{ $match: {'data.coordinates': { $exists : true } } }",
             "{ $sort: { 'timestamp': -1 } }",
-            "{ $limit: 10 }"})
-    List<TrackerData> findAllByTrackerIdWithCoordinates(String trackerId);
+            "{ $limit: ?1 }"})
+    List<TrackerData> findAllByTrackerIdWithCoordinates(String trackerId, int limit);
 
     @DeleteQuery(value = "{'tracker': '?0'}")
     void deleteAllByTrackerId(String trackerId);
+
+    @DeleteQuery(value = "{'tracker': {$in: ?0}}")
+    void deleteAllByTrackerIds(List<String> trackerIds);
 }
