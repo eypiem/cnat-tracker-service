@@ -1,6 +1,7 @@
 package dev.apma.cnat.trackerservice.controller;
 
 
+import dev.apma.cnat.trackerservice.dto.TrackerDataDTO;
 import dev.apma.cnat.trackerservice.model.TrackerData;
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
 import dev.apma.cnat.trackerservice.repository.TrackerRepository;
@@ -31,29 +32,32 @@ public class TrackerDataRestController {
     }
 
     @GetMapping("/data/latest")
-    public List<TrackerData> getLatestTrackerData(@RequestParam String userId) {
+    public List<TrackerDataDTO> getLatestTrackerData(@RequestParam String userId) {
         LOGGER.info("get /latest {}", userId);
-        return trackerRepo.findLatestTrackerDataWithCoordinatesByUserId(userId);
+        return trackerRepo.findLatestTrackerDataWithCoordinatesByUserId(userId)
+                .stream()
+                .map(TrackerDataDTO::fromTrackerData)
+                .toList();
     }
 
     @GetMapping("/{trackerId}/data")
-    public List<TrackerData> getTrackerData(@PathVariable String trackerId,
-                                            @RequestParam Optional<Instant> from,
-                                            @RequestParam Optional<Instant> to,
-                                            @RequestParam Optional<Boolean> hasLocation) {
+    public List<TrackerDataDTO> getTrackerData(@PathVariable String trackerId,
+                                               @RequestParam Optional<Instant> from,
+                                               @RequestParam Optional<Instant> to,
+                                               @RequestParam Optional<Boolean> hasLocation) {
         LOGGER.info("get /{}/data from: {} to: {} hasLocation: {}", trackerId, from, to, hasLocation);
+        List<TrackerData> r;
         if (hasLocation.orElse(false)) {
-            return trackerDataRepo.findAllByTrackerIdWithCoordinates(trackerId);
+            r = trackerDataRepo.findAllByTrackerIdWithCoordinates(trackerId);
+        } else if (from.isPresent() && to.isPresent()) {
+            r = trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from.get(), to.get());
+        } else if (from.isPresent()) {
+            r = trackerDataRepo.findAllByTrackerIdAndDateAfter(trackerId, from.get());
+        } else if (to.isPresent()) {
+            r = trackerDataRepo.findAllByTrackerIdAndDateBefore(trackerId, to.get());
+        } else {
+            r = trackerDataRepo.findAllByTrackerId(trackerId);
         }
-        if (from.isPresent() && to.isPresent()) {
-            return trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from.get(), to.get());
-        }
-        if (from.isPresent()) {
-            return trackerDataRepo.findAllByTrackerIdAndDateAfter(trackerId, from.get());
-        }
-        if (to.isPresent()) {
-            return trackerDataRepo.findAllByTrackerIdAndDateBefore(trackerId, to.get());
-        }
-        return trackerDataRepo.findAllByTrackerId(trackerId);
+        return r.stream().map(TrackerDataDTO::fromTrackerData).toList();
     }
 }

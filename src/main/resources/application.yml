@@ -1,7 +1,6 @@
 server:
   error:
-    whitelabel:
-      enabled: true
+    include-message: always
   port: 80
 
 spring:
