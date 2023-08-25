@@ -1,7 +1,6 @@
 package dev.apma.cnat.trackerservice.controller;
 
 
-import dev.apma.cnat.trackerservice.model.Tracker;
 import dev.apma.cnat.trackerservice.model.TrackerData;
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
 import dev.apma.cnat.trackerservice.repository.TrackerRepository;
@@ -34,13 +33,7 @@ public class TrackerDataRestController {
     @GetMapping("/data/latest")
     public List<TrackerData> getLatestTrackerData(@RequestParam String userId) {
         LOGGER.info("get /latest {}", userId);
-        return trackerRepo.findAllByUserId(userId)
-                .stream()
-                .map(Tracker::id)
-                .map(trackerDataRepo::findLatestByTrackerId)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+        return trackerRepo.findLatestTrackerDataWithCoordinatesByUserId(userId);
     }
 
     @GetMapping("/{trackerId}/data")
@@ -50,7 +43,7 @@ public class TrackerDataRestController {
                                             @RequestParam Optional<Boolean> hasLocation) {
         LOGGER.info("get /{}/data from: {} to: {} hasLocation: {}", trackerId, from, to, hasLocation);
         if (hasLocation.orElse(false)) {
-            return trackerDataRepo.findAllByTrackerIdWithLocation(trackerId);
+            return trackerDataRepo.findAllByTrackerIdWithCoordinates(trackerId);
         }
         if (from.isPresent() && to.isPresent()) {
             return trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from.get(), to.get());

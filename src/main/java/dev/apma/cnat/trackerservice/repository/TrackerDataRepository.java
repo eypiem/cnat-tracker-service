@@ -30,10 +30,10 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
     Optional<TrackerData> findLatestByTrackerId(String trackerId);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }",
-            "{ $match: {'data.location': { $exists : true } } }",
+            "{ $match: {'data.coordinates': { $exists : true } } }",
             "{ $sort: { 'timestamp': -1 } }",
             "{ $limit: 10 }"})
-    List<TrackerData> findAllByTrackerIdWithLocation(String trackerId);
+    List<TrackerData> findAllByTrackerIdWithCoordinates(String trackerId);
 
     @DeleteQuery(value = "{'tracker': '?0'}")
     void deleteAllByTrackerId(String trackerId);
