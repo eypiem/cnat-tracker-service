@@ -2,11 +2,11 @@ package dev.apma.cnat.trackerservice.service;
 
 
 import dev.apma.cnat.trackerservice.dto.TrackerDTO;
-import dev.apma.cnat.trackerservice.exceptions.TrackerServiceException;
+import dev.apma.cnat.trackerservice.exception.TrackerDoesNotExistException;
 import dev.apma.cnat.trackerservice.model.Tracker;
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
 import dev.apma.cnat.trackerservice.repository.TrackerRepository;
-import dev.apma.cnat.trackerservice.requests.TrackerRegisterRequest;
+import dev.apma.cnat.trackerservice.request.TrackerRegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +38,10 @@ public class TrackerServiceImpl implements TrackerService {
     }
 
     @Override
-    public TrackerDTO getTracker(String trackerId) throws TrackerServiceException {
+    public TrackerDTO getTracker(String trackerId) throws TrackerDoesNotExistException {
         return TrackerDTO.fromTracker(trackerRepo.findById(trackerId)
-                .orElseThrow(() -> new TrackerServiceException("Tracker with id [%s] not exist".formatted(trackerId))));
+                .orElseThrow(() -> new TrackerDoesNotExistException("Tracker with id [%s] does not exist".formatted(
+                        trackerId))));
     }
 
     @Override

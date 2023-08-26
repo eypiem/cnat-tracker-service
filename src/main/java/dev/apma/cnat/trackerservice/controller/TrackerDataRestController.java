@@ -36,13 +36,18 @@ public class TrackerDataRestController {
     public List<TrackerDataDTO> getTrackerData(@PathVariable String trackerId,
                                                @RequestParam Optional<Instant> from,
                                                @RequestParam Optional<Instant> to,
-                                               @RequestParam Optional<Boolean> hasLocation,
+                                               @RequestParam Optional<Boolean> hasCoordinates,
                                                @RequestParam Optional<Integer> limit) {
-        LOGGER.info("get /{}/data from: {} to: {} hasLocation: {} limit: {}", trackerId, from, to, hasLocation, limit);
+        LOGGER.info("get /{}/data from: {} to: {} hasCoordinates: {} limit: {}",
+                trackerId,
+                from,
+                to,
+                hasCoordinates,
+                limit);
         return trackerDataSvc.getTrackerData(trackerId,
                 from.orElse(null),
                 to.orElse(null),
-                hasLocation.orElse(null),
+                hasCoordinates.orElse(null),
                 limit.orElse(null));
     }
 }

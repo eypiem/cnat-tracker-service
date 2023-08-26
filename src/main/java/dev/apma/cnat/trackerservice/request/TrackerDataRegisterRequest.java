@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.requests;
+package dev.apma.cnat.trackerservice.request;
 
 
 import jakarta.validation.Valid;

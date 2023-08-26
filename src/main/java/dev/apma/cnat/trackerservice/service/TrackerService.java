@@ -2,8 +2,8 @@ package dev.apma.cnat.trackerservice.service;
 
 
 import dev.apma.cnat.trackerservice.dto.TrackerDTO;
-import dev.apma.cnat.trackerservice.exceptions.TrackerServiceException;
-import dev.apma.cnat.trackerservice.requests.TrackerRegisterRequest;
+import dev.apma.cnat.trackerservice.exception.TrackerDoesNotExistException;
+import dev.apma.cnat.trackerservice.request.TrackerRegisterRequest;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface TrackerService {
 
     List<TrackerDTO> getUserTrackers(String userId);
 
-    TrackerDTO getTracker(String trackerId) throws TrackerServiceException;
+    TrackerDTO getTracker(String trackerId) throws TrackerDoesNotExistException;
 
     void deleteTracker(String trackerId);
 

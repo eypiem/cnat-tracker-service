@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.exceptions;
+package dev.apma.cnat.trackerservice.exception;
 
 
 public class TrackerDataServiceException extends Exception {

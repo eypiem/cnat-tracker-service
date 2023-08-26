@@ -1,8 +1,8 @@
 package dev.apma.cnat.trackerservice.controller;
 
 
-import dev.apma.cnat.trackerservice.exceptions.TrackerDataServiceException;
-import dev.apma.cnat.trackerservice.requests.TrackerDataRegisterRequest;
+import dev.apma.cnat.trackerservice.exception.TrackerDoesNotExistException;
+import dev.apma.cnat.trackerservice.request.TrackerDataRegisterRequest;
 import dev.apma.cnat.trackerservice.service.TrackerDataService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class TrackerDataKafkaController {
 
         try {
             trackerDataSvc.register(req);
-        } catch (TrackerDataServiceException e) {
+        } catch (TrackerDoesNotExistException e) {
             LOGGER.error("Failed to register tracker data {}: {}", req, e.getMessage());
         }
     }

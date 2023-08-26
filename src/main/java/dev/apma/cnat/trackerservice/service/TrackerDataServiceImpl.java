@@ -2,12 +2,12 @@ package dev.apma.cnat.trackerservice.service;
 
 
 import dev.apma.cnat.trackerservice.dto.TrackerDataDTO;
-import dev.apma.cnat.trackerservice.exceptions.TrackerDataServiceException;
+import dev.apma.cnat.trackerservice.exception.TrackerDoesNotExistException;
 import dev.apma.cnat.trackerservice.model.Tracker;
 import dev.apma.cnat.trackerservice.model.TrackerData;
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;
 import dev.apma.cnat.trackerservice.repository.TrackerRepository;
-import dev.apma.cnat.trackerservice.requests.TrackerDataRegisterRequest;
+import dev.apma.cnat.trackerservice.request.TrackerDataRegisterRequest;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,13 +33,14 @@ public class TrackerDataServiceImpl implements TrackerDataService {
     }
 
     @Override
-    public void register(TrackerDataRegisterRequest req) throws TrackerDataServiceException {
+    public void register(TrackerDataRegisterRequest req) throws TrackerDoesNotExistException {
 
         Optional<Tracker> t = trackerRepo.findById(req.tracker().id());
         if (t.isPresent()) {
             trackerDataRepo.save(new TrackerData(t.get(), req.data(), req.timestamp()));
         } else {
-            throw new TrackerDataServiceException("Tracker with id [%s] does not exist.".formatted(req.tracker().id()));
+            throw new TrackerDoesNotExistException("Tracker with id [%s] does not exist.".formatted(req.tracker()
+                    .id()));
         }
     }
 
@@ -55,13 +56,13 @@ public class TrackerDataServiceImpl implements TrackerDataService {
     public List<TrackerDataDTO> getTrackerData(String trackerId,
                                                @Nullable Instant from,
                                                @Nullable Instant to,
-                                               @Nullable Boolean hasLocation,
+                                               @Nullable Boolean hasCoordinates,
                                                @Nullable Integer limit) {
         if (limit == null) {
             limit = DEFAULT_LIMIT;
         }
         List<TrackerData> r;
-        if (hasLocation != null && hasLocation) {
+        if (hasCoordinates != null && hasCoordinates) {
             r = trackerDataRepo.findAllByTrackerIdWithCoordinates(trackerId, limit);
         } else if (from != null && to != null) {
             r = trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from, to, limit);

@@ -2,16 +2,14 @@ package dev.apma.cnat.trackerservice.controller;
 
 
 import dev.apma.cnat.trackerservice.dto.TrackerDTO;
-import dev.apma.cnat.trackerservice.exceptions.TrackerServiceException;
-import dev.apma.cnat.trackerservice.requests.TrackerRegisterRequest;
+import dev.apma.cnat.trackerservice.exception.TrackerDoesNotExistException;
+import dev.apma.cnat.trackerservice.request.TrackerRegisterRequest;
 import dev.apma.cnat.trackerservice.service.TrackerService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -39,14 +37,9 @@ public class TrackerRestController {
     }
 
     @GetMapping("/{trackerId}")
-    public TrackerDTO getTracker(@PathVariable String trackerId) {
+    public TrackerDTO getTracker(@PathVariable String trackerId) throws TrackerDoesNotExistException {
         LOGGER.info("get /{}", trackerId);
-        try {
-            return trackerSvc.getTracker(trackerId);
-        } catch (TrackerServiceException e) {
-            LOGGER.error("Failed to get tracker with id [{}]: {}", trackerId, e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to get tracker");
-        }
+        return trackerSvc.getTracker(trackerId);
     }
 
     @DeleteMapping("/{trackerId}")
