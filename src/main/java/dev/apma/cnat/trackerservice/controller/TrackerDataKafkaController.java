@@ -24,7 +24,7 @@ public class TrackerDataKafkaController {
     }
 
     @KafkaListener(topics = "${app.kafka.topics.tracker-data-register}", properties = {
-            "spring.json.value.default.type=dev.apma.cnat.trackerservice.dto.TrackerDataDTO"})
+            "spring.json.value.default.type=dev.apma.cnat.trackerservice.request.TrackerDataRegisterRequest"})
     void listen(@Valid @Payload TrackerDataRegisterRequest req) {
         LOGGER.info("TrackerDataRegisterListener {}", req);
 
