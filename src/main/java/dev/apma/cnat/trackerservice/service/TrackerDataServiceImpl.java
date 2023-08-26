@@ -61,17 +61,25 @@ public class TrackerDataServiceImpl implements TrackerDataService {
         if (limit == null) {
             limit = DEFAULT_LIMIT;
         }
+        boolean hasC = hasCoordinates != null && hasCoordinates;
         List<TrackerData> r;
-        if (hasCoordinates != null && hasCoordinates) {
-            r = trackerDataRepo.findAllByTrackerIdWithCoordinates(trackerId, limit);
-        } else if (from != null && to != null) {
-            r = trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from, to, limit);
+        if (from != null && to != null) {
+            r = hasC ? trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBeforeWithCoordinates(trackerId,
+                    from,
+                    to,
+                    limit) : trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from, to, limit);
         } else if (from != null) {
-            r = trackerDataRepo.findAllByTrackerIdAndDateAfter(trackerId, from, limit);
+            r = hasC
+                    ? trackerDataRepo.findAllByTrackerIdAndDateAfterWithCoordinates(trackerId, from, limit)
+                    : trackerDataRepo.findAllByTrackerIdAndDateAfter(trackerId, from, limit);
         } else if (to != null) {
-            r = trackerDataRepo.findAllByTrackerIdAndDateBefore(trackerId, to, limit);
+            r = hasC
+                    ? trackerDataRepo.findAllByTrackerIdAndDateBeforeWithCoordinates(trackerId, to, limit)
+                    : trackerDataRepo.findAllByTrackerIdAndDateBefore(trackerId, to, limit);
         } else {
-            r = trackerDataRepo.findAllByTrackerId(trackerId, limit);
+            r = hasC
+                    ? trackerDataRepo.findAllByTrackerIdWithCoordinates(trackerId, limit)
+                    : trackerDataRepo.findAllByTrackerId(trackerId, limit);
         }
         return r.stream().map(TrackerDataDTO::fromTrackerData).toList();
     }

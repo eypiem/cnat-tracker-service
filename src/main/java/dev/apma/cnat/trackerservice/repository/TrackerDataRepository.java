@@ -37,6 +37,28 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
             "{ $limit: ?1 }"})
     List<TrackerData> findAllByTrackerIdWithCoordinates(String trackerId, int limit);
 
+    @Aggregation(pipeline = {
+            "{ $match: { 'tracker': '?0', 'timestamp': { $gt: ?1 }, 'data.coordinates': { $exists : true } } }",
+            "{ $sort: { 'timestamp': 1 } }",
+            "{ $limit: ?2 }"})
+    List<TrackerData> findAllByTrackerIdAndDateAfterWithCoordinates(String trackerId, Instant from, int limit);
+
+    @Aggregation(pipeline = {
+            "{ $match: { 'tracker': '?0', 'timestamp': { $lt: ?1 }, 'data.coordinates': { $exists : true } } }",
+            "{ $sort: { 'timestamp': 1 } }",
+            "{ $limit: ?2 }"})
+    List<TrackerData> findAllByTrackerIdAndDateBeforeWithCoordinates(String trackerId, Instant to, int limit);
+
+    @Aggregation(pipeline = {
+            "{ $match: { 'tracker': '?0', 'timestamp': {  $gt: ?1, $lt: ?2 }, 'data.coordinates': { $exists : true } "
+            + "} }",
+            "{ $sort: { 'timestamp': 1 } }",
+            "{ $limit: ?3 }"})
+    List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBeforeWithCoordinates(String trackerId,
+                                                                                 Instant from,
+                                                                                 Instant to,
+                                                                                 int limit);
+
     @DeleteQuery(value = "{'tracker': '?0'}")
     void deleteAllByTrackerId(String trackerId);
 
