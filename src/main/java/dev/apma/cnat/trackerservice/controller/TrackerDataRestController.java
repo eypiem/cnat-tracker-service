@@ -15,6 +15,11 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class is a controller for REST API endpoints related to tracker data.
+ *
+ * @author Amir Parsa Mahdian
+ */
 @RestController
 public class TrackerDataRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerDataRestController.class);

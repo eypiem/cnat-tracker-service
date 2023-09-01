@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import java.time.Instant;
 import java.util.List;
 
+
 public interface TrackerDataService {
 
     void register(TrackerDataRegisterRequest req) throws TrackerDoesNotExistException;

@@ -1,6 +1,11 @@
 package dev.apma.cnat.trackerservice.exception;
 
 
+/**
+ * This {@code Exception} indicates a situation where a not existing tracker has been requested.
+ *
+ * @author Amir Parsa Mahdian
+ */
 public class TrackerDoesNotExistException extends TrackerServiceException {
 
     public TrackerDoesNotExistException() {

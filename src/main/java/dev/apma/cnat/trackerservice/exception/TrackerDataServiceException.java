@@ -1,6 +1,12 @@
 package dev.apma.cnat.trackerservice.exception;
 
 
+/**
+ * This {@code Exception} indicates a situation where a request could not be performed on the {@code
+ * TrackerDataService}.
+ *
+ * @author Amir Parsa Mahdian
+ */
 public class TrackerDataServiceException extends Exception {
 
     public TrackerDataServiceException() {

@@ -22,9 +22,9 @@ public class TrackerServiceImpl implements TrackerService {
     private final TrackerRepository trackerRepo;
 
     @Autowired
-    public TrackerServiceImpl(TrackerDataRepository trackerDataRepo, TrackerRepository trackerRepo) {
-        this.trackerDataRepo = trackerDataRepo;
+    public TrackerServiceImpl(TrackerRepository trackerRepo, TrackerDataRepository trackerDataRepo) {
         this.trackerRepo = trackerRepo;
+        this.trackerDataRepo = trackerDataRepo;
     }
 
     @Override

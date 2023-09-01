@@ -12,6 +12,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 
+/**
+ * This class is a controller for Kafka topics related to tracker data.
+ *
+ * @author Amir Parsa Mahdian
+ */
 @Controller
 public class TrackerDataKafkaController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrackerDataKafkaController.class);

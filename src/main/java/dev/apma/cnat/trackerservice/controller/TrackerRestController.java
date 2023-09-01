@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * This class is a controller for REST API endpoints related to trackers.
+ *
+ * @author Amir Parsa Mahdian
+ */
 @RestController
 public class TrackerRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TrackerRestController.class);
