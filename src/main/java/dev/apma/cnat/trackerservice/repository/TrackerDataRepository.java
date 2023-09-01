@@ -9,6 +9,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.time.Instant;
 import java.util.List;
 
+/**
+ * This interface extends the {@code MongoRepository} and allows Spring Boot Data MongoDB to perform operations of
+ * the {@code trackerData} collection.
+ *
+ * @author Amir Parsa Mahdian
+ */
 public interface TrackerDataRepository extends MongoRepository<TrackerData, String> {
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': 1 } }", "{ $limit: ?1 }"})
     List<TrackerData> findAllByTrackerId(String trackerId, int limit);

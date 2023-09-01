@@ -77,7 +77,7 @@ class TrackerServiceTest {
 
         @Test
         void tracker_1() throws TrackerDoesNotExistException {
-            var actual = trackerSvc.getTracker(u1_t1.id());
+            var actual = trackerSvc.getTrackerById(u1_t1.id());
 
             assertAll(() -> assertEquals(u1_t1.id(), actual.id()),
                     () -> assertEquals(u1_t1.userId(), actual.userId()),
@@ -86,7 +86,7 @@ class TrackerServiceTest {
 
         @Test
         void non_existent_tracker() {
-            assertThrows(TrackerDoesNotExistException.class, () -> trackerSvc.getTracker(NON_EXISTENT_TRACKER_ID));
+            assertThrows(TrackerDoesNotExistException.class, () -> trackerSvc.getTrackerById(NON_EXISTENT_TRACKER_ID));
         }
     }
 
@@ -131,15 +131,15 @@ class TrackerServiceTest {
         @Test
         void valid() {
             var t = trackerSvc.registerTracker(new TrackerRegisterRequest(UUID.randomUUID().toString(), "name1"));
-            trackerSvc.deleteTracker(t.id());
+            trackerSvc.deleteTrackerById(t.id());
 
-            assertAll(() -> assertThrows(TrackerDoesNotExistException.class, () -> trackerSvc.getTracker(t.id())),
+            assertAll(() -> assertThrows(TrackerDoesNotExistException.class, () -> trackerSvc.getTrackerById(t.id())),
                     () -> assertEquals(0, trackerDataSvc.getTrackerData(t.id(), null, null, null, null).size()));
         }
 
         @Test
         void non_existent_tracker() {
-            assertDoesNotThrow(() -> trackerSvc.deleteTracker(NON_EXISTENT_TRACKER_ID));
+            assertDoesNotThrow(() -> trackerSvc.deleteTrackerById(NON_EXISTENT_TRACKER_ID));
         }
     }
 

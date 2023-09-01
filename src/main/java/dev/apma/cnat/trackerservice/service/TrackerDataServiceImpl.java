@@ -17,13 +17,29 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * An implementation of the {@code TrackerDataService} interface.
+ *
+ * @author Amir Parsa Mahdian
+ * @see dev.apma.cnat.trackerservice.service.TrackerDataService
+ */
 @Service
 @Transactional
 public class TrackerDataServiceImpl implements TrackerDataService {
+    
+    /**
+     * The default limit applied to <i>get tracker data</i> queries
+     */
     private static final int DEFAULT_LIMIT = 10;
 
+    /**
+     * The tracker repository
+     */
     private final TrackerRepository trackerRepo;
 
+    /**
+     * The tracker data repository
+     */
     private final TrackerDataRepository trackerDataRepo;
 
     @Autowired
@@ -42,14 +58,6 @@ public class TrackerDataServiceImpl implements TrackerDataService {
             throw new TrackerDoesNotExistException("Tracker with id [%s] does not exist.".formatted(req.tracker()
                     .id()));
         }
-    }
-
-    @Override
-    public List<TrackerDataDTO> getLatestTrackerData(String userId) {
-        return trackerRepo.findLatestTrackerDataWithCoordinatesByUserId(userId)
-                .stream()
-                .map(TrackerDataDTO::fromTrackerData)
-                .toList();
     }
 
     @Override
@@ -83,5 +91,13 @@ public class TrackerDataServiceImpl implements TrackerDataService {
                     : trackerDataRepo.findAllByTrackerId(trackerId, lim);
         }
         return r.stream().map(TrackerDataDTO::fromTrackerData).toList();
+    }
+
+    @Override
+    public List<TrackerDataDTO> getLatestTrackerData(String userId) {
+        return trackerRepo.findLatestTrackerDataWithCoordinatesByUserId(userId)
+                .stream()
+                .map(TrackerDataDTO::fromTrackerData)
+                .toList();
     }
 }

@@ -44,13 +44,13 @@ public class TrackerRestController {
     @GetMapping("/{trackerId}")
     public TrackerDTO getTracker(@PathVariable String trackerId) throws TrackerDoesNotExistException {
         LOGGER.info("get /{}", trackerId);
-        return trackerSvc.getTracker(trackerId);
+        return trackerSvc.getTrackerById(trackerId);
     }
 
     @DeleteMapping("/{trackerId}")
     public void deleteTracker(@PathVariable String trackerId) {
         LOGGER.info("delete /{}", trackerId);
-        trackerSvc.deleteTracker(trackerId);
+        trackerSvc.deleteTrackerById(trackerId);
     }
 
     @DeleteMapping("")

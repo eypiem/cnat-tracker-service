@@ -13,13 +13,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * An implementation of the {@code TrackerService} interface.
+ *
+ * @author Amir Parsa Mahdian
+ * @see dev.apma.cnat.trackerservice.service.TrackerService
+ */
 @Service
 @Transactional
 public class TrackerServiceImpl implements TrackerService {
 
-    private final TrackerDataRepository trackerDataRepo;
-
+    /**
+     * The tracker repository
+     */
     private final TrackerRepository trackerRepo;
+
+    /**
+     * The tracker data repository
+     */
+    private final TrackerDataRepository trackerDataRepo;
 
     @Autowired
     public TrackerServiceImpl(TrackerRepository trackerRepo, TrackerDataRepository trackerDataRepo) {
@@ -33,7 +45,7 @@ public class TrackerServiceImpl implements TrackerService {
     }
 
     @Override
-    public TrackerDTO getTracker(String trackerId) throws TrackerDoesNotExistException {
+    public TrackerDTO getTrackerById(String trackerId) throws TrackerDoesNotExistException {
         return TrackerDTO.fromTracker(trackerRepo.findById(trackerId)
                 .orElseThrow(() -> new TrackerDoesNotExistException("Tracker with id [%s] does not exist".formatted(
                         trackerId))));
@@ -45,7 +57,7 @@ public class TrackerServiceImpl implements TrackerService {
     }
 
     @Override
-    public void deleteTracker(String trackerId) {
+    public void deleteTrackerById(String trackerId) {
         trackerDataRepo.deleteAllByTrackerId(trackerId);
         trackerRepo.deleteById(trackerId);
     }

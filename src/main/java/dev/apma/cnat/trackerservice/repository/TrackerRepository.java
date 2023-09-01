@@ -10,6 +10,12 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
+/**
+ * This interface extends the {@code MongoRepository} and allows Spring Boot Data MongoDB to perform operations of
+ * the {@code tracker} collection.
+ *
+ * @author Amir Parsa Mahdian
+ */
 public interface TrackerRepository extends MongoRepository<Tracker, String> {
     @Query("{'userId': '?0'}")
     List<Tracker> findAllByUserId(String userId);
