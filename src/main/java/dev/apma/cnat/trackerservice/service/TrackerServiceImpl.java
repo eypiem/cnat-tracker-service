@@ -33,15 +33,15 @@ public class TrackerServiceImpl implements TrackerService {
     }
 
     @Override
-    public List<TrackerDTO> getUserTrackers(String userId) {
-        return trackerRepo.findAllByUserId(userId).stream().map(TrackerDTO::fromTracker).toList();
-    }
-
-    @Override
     public TrackerDTO getTracker(String trackerId) throws TrackerDoesNotExistException {
         return TrackerDTO.fromTracker(trackerRepo.findById(trackerId)
                 .orElseThrow(() -> new TrackerDoesNotExistException("Tracker with id [%s] does not exist".formatted(
                         trackerId))));
+    }
+
+    @Override
+    public List<TrackerDTO> getUserTrackers(String userId) {
+        return trackerRepo.findAllByUserId(userId).stream().map(TrackerDTO::fromTracker).toList();
     }
 
     @Override

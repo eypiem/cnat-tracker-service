@@ -11,9 +11,9 @@ public interface TrackerService {
 
     TrackerDTO registerTracker(TrackerRegisterRequest trr);
 
-    List<TrackerDTO> getUserTrackers(String userId);
-
     TrackerDTO getTracker(String trackerId) throws TrackerDoesNotExistException;
+
+    List<TrackerDTO> getUserTrackers(String userId);
 
     void deleteTracker(String trackerId);
 

@@ -59,6 +59,9 @@ public class TrackerDataServiceImpl implements TrackerDataService {
                                                @Nullable Boolean hasCoordinates,
                                                @Nullable Integer limit) {
         int lim = limit == null ? DEFAULT_LIMIT : limit;
+        if (lim < 1) {
+            return List.of();
+        }
         boolean hasC = hasCoordinates != null && hasCoordinates;
         List<TrackerData> r;
         if (from != null && to != null) {
