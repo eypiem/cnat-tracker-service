@@ -11,9 +11,10 @@ import java.util.List;
 
 
 /**
- * This interface represents a service for handling the tracker data repository.
+ * This interface represents a service for performing operations on {@code TrackerDataRepository}.
  *
  * @author Amir Parsa Mahdian
+ * @see dev.apma.cnat.trackerservice.repository.TrackerDataRepository
  */
 public interface TrackerDataService {
 

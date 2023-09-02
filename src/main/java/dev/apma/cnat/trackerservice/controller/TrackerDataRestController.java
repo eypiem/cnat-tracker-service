@@ -31,12 +31,6 @@ public class TrackerDataRestController {
         this.trackerDataSvc = trackerDataSvc;
     }
 
-    @GetMapping("/data/latest")
-    public List<TrackerDataDTO> getLatestTrackerData(@RequestParam String userId) {
-        LOGGER.info("get /data/latest {}", userId);
-        return trackerDataSvc.getLatestTrackerData(userId);
-    }
-
     @GetMapping("/{trackerId}/data")
     public List<TrackerDataDTO> getTrackerData(@PathVariable String trackerId,
                                                @RequestParam Optional<Instant> from,
@@ -54,5 +48,11 @@ public class TrackerDataRestController {
                 to.orElse(null),
                 hasCoordinates.orElse(null),
                 limit.orElse(null));
+    }
+
+    @GetMapping("/data/latest")
+    public List<TrackerDataDTO> getLatestTrackerData(@RequestParam String userId) {
+        LOGGER.info("get /data/latest {}", userId);
+        return trackerDataSvc.getLatestTrackerData(userId);
     }
 }

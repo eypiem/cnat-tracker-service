@@ -19,6 +19,13 @@ public record ValidationErrorsDTO(List<ValidationError> validationErrors) {
         }
     }
 
+
+    /**
+     * Returns a {@code ValidationErrorsDTO} representation of the {@code MethodArgumentNotValidException}.
+     *
+     * @param ex the {@code MethodArgumentNotValidException} to be mapped
+     * @return a {@code ValidationErrorsDTO} representation of the {@code MethodArgumentNotValidException}
+     */
     public static ValidationErrorsDTO fromFieldError(MethodArgumentNotValidException ex) {
         return new ValidationErrorsDTO(ex.getBindingResult()
                 .getFieldErrors()

@@ -8,9 +8,10 @@ import dev.apma.cnat.trackerservice.request.TrackerRegisterRequest;
 import java.util.List;
 
 /**
- * This interface represents a service for handling the tracker repository.
+ * This interface represents a service for performing operations on {@code TrackerRepository}.
  *
  * @author Amir Parsa Mahdian
+ * @see dev.apma.cnat.trackerservice.repository.TrackerRepository
  */
 public interface TrackerService {
 

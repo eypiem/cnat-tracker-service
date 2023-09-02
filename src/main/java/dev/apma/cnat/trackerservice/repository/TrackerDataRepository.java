@@ -10,8 +10,8 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * This interface extends the {@code MongoRepository} and allows Spring Boot Data MongoDB to perform operations of
- * the {@code trackerData} collection.
+ * This interface extends the {@code MongoRepository} interface and allows Spring Boot Data MongoDB to perform
+ * operations of the <i>trackerData</i> collection.
  *
  * @author Amir Parsa Mahdian
  */
