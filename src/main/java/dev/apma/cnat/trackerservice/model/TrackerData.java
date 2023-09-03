@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Amir Parsa Mahdian
  */
 @Document("trackerData")
-@CompoundIndex(def = "{ 'tracker': 1, 'timestamp': 1 }")
-@CompoundIndex(def = "{ 'tracker.$id': 1, timestamp: -1 }")
+@CompoundIndex(name = "tracker_1_timestamp_1", def = "{ 'tracker': 1, 'timestamp': 1 }")
+@CompoundIndex(name = "tracker.$id_1_timestamp_-1", def = "{ 'tracker.$id': 1, timestamp: -1 }")
 public record TrackerData(@DBRef Tracker tracker, Map<String, Object> data, @Indexed Instant timestamp) {
 }
