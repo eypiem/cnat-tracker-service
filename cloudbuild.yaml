@@ -1,11 +1,41 @@
-steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: [ 'build', '-t', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA', '.' ]
-
 substitutions:
-  _LOCATION: us-central1
+  _REGION: us-central1
   _REPOSITORY: cnat
-  _IMAGE: cnat-tracker-service
 
-images:
-- '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}:$SHORT_SHA'
+steps:
+  - name: "gcr.io/k8s-skaffold/skaffold"
+    entrypoint: "sh"
+    args:
+      - -xe
+      - -c
+      - |
+        # Build and push images
+        skaffold build --file-output=/workspace/artifacts.json \
+                       --default-repo=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY} \
+                       --push=true
+
+        # Test images
+        skaffold test --build-artifacts=/workspace/artifacts.json
+
+  - name: "google/cloud-sdk:latest"
+    entrypoint: "sh"
+    args:
+      - -xe
+      - -c
+      - |
+        gcloud config set deploy/region ${_REGION}
+        sed -i s/PROJECT_ID/$PROJECT_ID/g deploy/*
+        gcloud deploy apply --file deploy/pipeline.yaml
+        gcloud deploy apply --file deploy/staging.yaml
+        gcloud deploy apply --file deploy/prod.yaml
+        gcloud deploy releases create rel-${SHORT_SHA} \
+                            --delivery-pipeline cnat-cicd \
+                            --description "$(git log -1  --pretty='%s')" \
+                            --build-artifacts /workspace/artifacts.json
+artifacts:
+  objects:
+    location: "gs://$PROJECT_ID-gceme-artifacts/"
+    paths:
+      - "/workspace/artifacts.json"
+timeout: 3600s
+

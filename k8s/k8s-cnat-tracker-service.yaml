@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cnat-tracker-service-svc
+  namespace: cnat
+spec:
+  selector:
+    app: cnat-tracker-service
+  ports:
+    - port: 30081
+      targetPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cnat-tracker-service-deploy
+  namespace: cnat
+  labels:
+    app: cnat-tracker-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cnat-tracker-service
+  template:
+    metadata:
+      labels:
+        app: cnat-tracker-service
+    spec:
+      containers:
+        - name: some-cnat-tracker-service
+          image: cnat-tracker-service
+          env:
+            - name: CNAT_KAFKA_URI
+              value: cnat-kafka-svc:9092
+            - name: CNAT_KAFKA_TRACKER_DATA_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: cnat-configmap
+                  key: cnat_kafka_tracker_data_topic
+            - name: CNAT_TRACKER_SERVICE_KAFKA_CONSUMER_GROUP_ID
+              value: cnat-tracker-service
+            - name: CNAT_TRACKER_SERVICE_MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: cnat-secrets
+                  key: monogdb_uri
+            - name: CNAT_TRACKER_SERVICE_MONGODB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: cnat-secrets
+                  key: monogdb_database
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            initialDelaySeconds: 80
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health/liveness
+              port: 80
+          readinessProbe:
+            initialDelaySeconds: 80
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health/readiness
+              port: 80
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 1000m
+              ephemeral-storage: 512Mi
+            limits:
+              memory: 512Mi
+              cpu: 1000m
+              ephemeral-storage: 512Mi

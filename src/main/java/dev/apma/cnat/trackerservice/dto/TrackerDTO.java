@@ -4,7 +4,7 @@ package dev.apma.cnat.trackerservice.dto;
 import dev.apma.cnat.trackerservice.model.Tracker;
 
 /**
- * This DTO class represents the tracker data format returned from CNAT Tracker Service.
+ * This DTO class represents the tracker format returned from CNAT Tracker Service.
  *
  * @author Amir Parsa Mahdian
  */

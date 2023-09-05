@@ -1,0 +1,12 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+metadata:
+  name: full-stack
+build:
+  artifacts:
+    - image: cnat-tracker-service
+      context: ./
+deploy:
+  kubectl:
+    manifests:
+      - k8s/k8s-cnat-tracker-service.yaml
