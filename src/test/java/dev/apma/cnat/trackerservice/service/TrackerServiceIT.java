@@ -1,7 +1,7 @@
 package dev.apma.cnat.trackerservice.service;
 
 
-import dev.apma.cnat.trackerservice.MongoDBTestContainerConfig;
+import dev.apma.cnat.trackerservice.service.MongoDBTestContainerConfig;
 import dev.apma.cnat.trackerservice.dto.TrackerDTO;
 import dev.apma.cnat.trackerservice.exception.TrackerDoesNotExistException;
 import dev.apma.cnat.trackerservice.request.TrackerRegisterRequest;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 @ContextConfiguration(classes = MongoDBTestContainerConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TrackerServiceTest {
+class TrackerServiceIT {
 
     @Autowired
     private TrackerService trackerSvc;
