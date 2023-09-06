@@ -1,6 +1,8 @@
 substitutions:
   _REGION: us-central1
   _REPOSITORY: cnat
+  _NAME: CNAT Tracker Service
+  _CD_PIPELINE: cnat-microservices-cd
 
 steps:
   - name: "gcr.io/k8s-skaffold/skaffold"
@@ -29,8 +31,8 @@ steps:
         gcloud deploy apply --file deploy/staging.yaml
         gcloud deploy apply --file deploy/prod.yaml
         gcloud deploy releases create rel-${SHORT_SHA} \
-                            --delivery-pipeline cnat-cicd \
-                            --description "$(git log -1  --pretty='%s')" \
+                            --delivery-pipeline ${_CD_PIPELINE} \
+                            --description "${_NAME}: $(git log -1 --pretty='%s')" \
                             --build-artifacts /workspace/artifacts.json
 artifacts:
   objects:
@@ -38,4 +40,3 @@ artifacts:
     paths:
       - "/workspace/artifacts.json"
 timeout: 3600s
-

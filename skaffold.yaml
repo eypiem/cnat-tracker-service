@@ -1,7 +1,7 @@
 apiVersion: skaffold/v2beta16
 kind: Config
 metadata:
-  name: full-stack
+  name: cnat-tracker-service-skaffold
 build:
   artifacts:
     - image: cnat-tracker-service
