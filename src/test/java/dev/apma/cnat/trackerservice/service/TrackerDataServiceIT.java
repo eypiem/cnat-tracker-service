@@ -1,7 +1,7 @@
 package dev.apma.cnat.trackerservice.service;
 
 
-import dev.apma.cnat.trackerservice.service.MongoDBTestContainerConfig;
+import dev.apma.cnat.trackerservice.MongoDBTestContainerConfig;
 import dev.apma.cnat.trackerservice.exception.TrackerDoesNotExistException;
 import dev.apma.cnat.trackerservice.request.TrackerDataRegisterRequest;
 import dev.apma.cnat.trackerservice.request.TrackerRegisterRequest;

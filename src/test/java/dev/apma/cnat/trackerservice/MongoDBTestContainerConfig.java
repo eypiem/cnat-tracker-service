@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.service;
+package dev.apma.cnat.trackerservice;
 
 
 import dev.apma.cnat.trackerservice.repository.TrackerDataRepository;

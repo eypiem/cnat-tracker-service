@@ -1,4 +1,4 @@
-package dev.apma.cnat.trackerservice.controller;
+package dev.apma.cnat.trackerservice;
 
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,6 +1,7 @@
 package dev.apma.cnat.trackerservice.controller;
 
 
+import dev.apma.cnat.trackerservice.ControllerTestConfig;
 import dev.apma.cnat.trackerservice.dto.TrackerDTO;
 import dev.apma.cnat.trackerservice.dto.TrackerDataDTO;
 import dev.apma.cnat.trackerservice.service.TrackerDataService;
