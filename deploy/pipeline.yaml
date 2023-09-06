@@ -1,5 +1,6 @@
 apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
+metadata:
   name: cnat-microservices-cd
 description: CNAT microservices delivery pipeline
 serialPipeline:
