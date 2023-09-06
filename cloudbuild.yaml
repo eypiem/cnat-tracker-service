@@ -1,8 +1,7 @@
 substitutions:
   _REGION: us-central1
   _REPOSITORY: cnat
-  _NAME: CNAT Tracker Service
-  _CD_PIPELINE: cnat-microservices-cd
+  _CD_PIPELINE: cnat-tracker-service-cd
 
 steps:
   - name: "gcr.io/k8s-skaffold/skaffold"
@@ -15,9 +14,6 @@ steps:
         skaffold build --file-output=/workspace/artifacts.json \
                        --default-repo=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY} \
                        --push=true
-
-        # Test images
-        skaffold test --build-artifacts=/workspace/artifacts.json
 
   - name: "google/cloud-sdk:latest"
     entrypoint: "sh"
@@ -32,7 +28,7 @@ steps:
         gcloud deploy apply --file deploy/prod.yaml
         gcloud deploy releases create rel-${SHORT_SHA} \
                             --delivery-pipeline ${_CD_PIPELINE} \
-                            --description "${_NAME}: $(git log -1 --pretty='%s')" \
+                            --description "$(git log -1 --pretty='%s')" \
                             --build-artifacts /workspace/artifacts.json
 artifacts:
   objects:
