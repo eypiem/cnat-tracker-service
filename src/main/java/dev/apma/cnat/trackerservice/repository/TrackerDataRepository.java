@@ -16,7 +16,7 @@ import java.util.List;
  * @author Amir Parsa Mahdian
  */
 public interface TrackerDataRepository extends MongoRepository<TrackerData, String> {
-    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': 1 } }", "{ $limit: ?1 }"})
+    @Aggregation(pipeline = {"{ $match: { 'tracker': '?0' } }", "{ $sort: { 'timestamp': -1 } }", "{ $limit: ?1 }"})
     List<TrackerData> findAllByTrackerId(String trackerId, int limit);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $gt: ?1 } } }",
@@ -25,13 +25,12 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
     List<TrackerData> findAllByTrackerIdAndDateAfter(String trackerId, Instant from, int limit);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': { $lt: ?1 } } }",
-            "{ $sort: { 'timestamp': 1 } }",
+            "{ $sort: { 'timestamp': -1 } }",
             "{ $limit: ?2 }"})
     List<TrackerData> findAllByTrackerIdAndDateBefore(String trackerId, Instant to, int limit);
 
     @Aggregation(pipeline = {"{ $match: { 'tracker': '?0', 'timestamp': {  $gt: ?1, $lt: ?2 } } }",
-            "{ $sort: { 'timestamp': 1 } }",
-            "{ $limit: ?3 }"})
+            "{ $sort: { 'timestamp': -1 } }"})
     List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBefore(String trackerId,
                                                                   Instant from,
                                                                   Instant to,
@@ -51,15 +50,14 @@ public interface TrackerDataRepository extends MongoRepository<TrackerData, Stri
 
     @Aggregation(pipeline = {
             "{ $match: { 'tracker': '?0', 'timestamp': { $lt: ?1 }, 'data.coordinates': { $exists : true } } }",
-            "{ $sort: { 'timestamp': 1 } }",
+            "{ $sort: { 'timestamp': -1 } }",
             "{ $limit: ?2 }"})
     List<TrackerData> findAllByTrackerIdAndDateBeforeWithCoordinates(String trackerId, Instant to, int limit);
 
     @Aggregation(pipeline = {
             "{ $match: { 'tracker': '?0', 'timestamp': {  $gt: ?1, $lt: ?2 }, 'data.coordinates': { $exists : true } "
             + "} }",
-            "{ $sort: { 'timestamp': 1 } }",
-            "{ $limit: ?3 }"})
+            "{ $sort: { 'timestamp': -1 } }"})
     List<TrackerData> findAllByTrackerIdAndDateAfterAndDateBeforeWithCoordinates(String trackerId,
                                                                                  Instant from,
                                                                                  Instant to,
