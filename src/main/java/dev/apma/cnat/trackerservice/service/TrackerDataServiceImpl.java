@@ -26,7 +26,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class TrackerDataServiceImpl implements TrackerDataService {
-    
+
     /**
      * The default limit applied to <i>get tracker data</i> queries
      */
@@ -75,8 +75,7 @@ public class TrackerDataServiceImpl implements TrackerDataService {
         if (from != null && to != null) {
             r = hasC ? trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBeforeWithCoordinates(trackerId,
                     from,
-                    to,
-                    lim) : trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from, to, lim);
+                    to) : trackerDataRepo.findAllByTrackerIdAndDateAfterAndDateBefore(trackerId, from, to);
         } else if (from != null) {
             r = hasC
                     ? trackerDataRepo.findAllByTrackerIdAndDateAfterWithCoordinates(trackerId, from, lim)
