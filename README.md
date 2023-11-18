@@ -6,17 +6,18 @@ processing them.
 ## Software Architecture:
 The software architecture in this microservice consists of three layers; Controller layer, service 
 layer, and repository layer. Request objects are used to define the request body for each 
-endpoint and responses are either a single or an array of DTOs
+endpoint and responses are either a single or an array of DTOs.
 
 The controller layer is responsible for creating the URL mapping with the required method, 
 response type, and body or query parameter, and also field validation. As the API Gateway has 
 performed the required security checks on the requests, this microservice does not put any form 
 of authentication in place.
+
 In contrast with API Gateway the service layer in this application acts as the middleman between 
 the controller layer and the repository layer. It calls the necessary repository methods to 
 perform the request and parses the response into the appropriate object for the controller layer.
 The repository layer in this architecture is an interface for performing database operations. The 
-statements for these operations are defined and executed in this layer
+statements for these operations are defined and executed in this layer.
 
 ## API:
 | Method | Path         | Request                                      | Response         | Description                                      |
